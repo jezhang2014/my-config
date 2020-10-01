@@ -1,0 +1,25 @@
+# Host addresses
+127.0.0.1  localhost
+127.0.1.1  jezhang-pc
+::1        localhost ip6-localhost ip6-loopback
+ff02::1    ip6-allnodes
+ff02::2    ip6-allrouters
+
+#140.82.112.3  github.com
+#140.82.113.4  gist.github.com
+#99.232.69.194  github.global.ssl.fastly.net
+#185.199.110.153  assets-cdn.github.com
+#199.232.68.133  raw.githubusercontent.com
+#199.232.68.133  cloud.githubusercontent.com
+#199.232.68.133  camo.githubusercontent.com
+#199.232.68.133 avatars0.githubusercontent.com
+#199.232.68.133 avatars1.githubusercontent.com
+#199.232.68.133 avatars2.githubusercontent.com
+#199.232.68.133 avatars3.githubusercontent.com
+#199.232.68.133 avatars4.githubusercontent.com
+#199.232.68.133 avatars5.githubusercontent.com
+#199.232.68.133 avatars6.githubusercontent.com
+#199.232.68.133 avatars7.githubusercontent.com
+#199.232.68.133 avatars8.githubusercontent.com
+
+#2607:f8b0:4001:c22::52 go.googlesource.com
