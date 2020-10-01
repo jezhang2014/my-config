@@ -1,0 +1,68 @@
+启动命令:
+sudo kubeadm init --image-repository registry.aliyuncs.com/google_containers --pod-network-cidr=10.244.0.0/16 --service-cidr=10.96.0.0/12 --kubernetes-version=1.18.3
+
+重置用:
+sudo kubeadm reset 然后y
+
+sudo vi /etc/fstab 注释调swap
+
+
+成功结果:
+[kubelet-finalize] Updating "/etc/kubernetes/kubelet.conf" to point to a rotatable kubelet client certificate and key
+[addons] Applied essential addon: CoreDNS
+[addons] Applied essential addon: kube-proxy
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+
+kubeadm join 192.168.1.9:6443 --token rzuom9.p9rd4ea9nvbqasku \
+    --discovery-token-ca-cert-hash sha256:b68970aa160e777eac2f0b1eaca7c87e7bc22b91a71549352e173dcdafef8503 
+    
+然后手工调整config文件权限，让非sudo 命令可以找到
+sudo chown jezhang $HOME/.kube/config
+
+kubectl cluster-info 
+
+kubectl create -f kubernetes-dashboard.yaml
+kubectl get pod -n kubernetes-dashboard
+
+kubectl proxy 后
+
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+直接从指定地址拉镜像加速
+docker pull hub-mirror.c.163.com/library/java:8
+
+vi /etc/docker/daemon.json
+{
+  "registry-mirrors": ["https://hub-mirror.c.163.com"]
+}
+service docker restart
+
+kubectl get namespace
+
+kubectl taint nodes --all node-role.kubernetes.io/master-
+
+sudo add-apt-repository \
+   "deb [arch=amd64] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/debian \
+   $(lsb_release -cs) \
+   stable"
+   
+删除   
+sudo add-apt-repository -r \
+   "deb [arch=amd64] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/debian \
+   $(lsb_release -cs) \
+   stable"
+

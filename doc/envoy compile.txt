@@ -1,0 +1,1 @@
+bazel-2.2.0 build //src/envoy:envoy --distdir ../../build/envoy-dist

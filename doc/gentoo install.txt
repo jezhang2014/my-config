@@ -1,0 +1,282 @@
+# 启动sshd
+/etc/init.d/sshd start
+passwd
+# 这里ssh root@192.168.1.2登录
+
+# 分配磁盘
+cfdisk /dev/mmcblk0
+fdisk -l
+# 分区结果
+Device             Start       End   Sectors  Size Type
+/dev/mmcblk0p1      2048   1026047   1024000  500M EFI System
+/dev/mmcblk0p2   1026048 231712767 230686720  110G Linux filesystem
+/dev/mmcblk0p3 231712768 244277214  12564447    6G Linux swap
+
+# 格式化
+# /boot一定要格式化成vfat格式
+mkfs.vfat /dev/mmcblk0p1
+# /格式化成btrfs格式
+mkfs.btrfs /dev/mmcblk0p2
+# 启用swap分区
+mkswap /dev/mmcblk0p3
+swapon /dev/mmcblk0p3
+
+# 挂载磁盘
+mount /dev/mmcblk0p2 /mnt/gentoo/
+cd /mnt/gentoo
+
+# 下载systemd版本的stage3
+wget https://mirrors.tuna.tsinghua.edu.cn/gentoo/releases/amd64/autobuilds/current-stage3-amd64-systemd/stage3-amd64-systemd-20200909T214504Z.tar.xz
+tar xvf stage3-amd64-systemd-20200909T214504Z.tar.xz
+
+# 复制dns
+cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
+
+# 修改/mnt/gentoo/etc/portage/make.conf
+nano /mnt/gentoo/etc/portage/make.conf
+COMMON_FLAGS="-march=native -O2 -pipe"
+USE="-bindist"
+MAKEOPTS="-j4"
+EMERGE_DEFAULT_OPTS="--keep-going --with-bdeps=y --autounmask-write"
+ACCEPT_KEYWORDS="* ~amd64"
+ACCEPT_LICENSE="*"
+L10N="en-US zh-CN en zh"
+LINGUAS="en_US zh_CN en zh"
+VIDEO_CARDS="intel i915 i965"
+GRUB_PLATFORMS="efi-64"
+CHOST="x86_64-pc-linux-gnu"
+
+# 选择源放入make.conf
+mirrorselect -i -o >> /mnt/gentoo/etc/portage/make.conf
+GENTOO_MIRRORS="https://mirrors.163.com/gentoo/ https://mirrors.tuna.tsinghua.edu.cn/gentoo"
+
+
+# 修改/mnt/gentoo/etc/portage/package.use/ghostscript-gpl
+app-text/ghostscript-gpl -l10n_zh-CN
+
+# 创建/mnt/gentoo/etc/portage/repos.conf文件夹，配置gentoo的ebuild仓库
+mkdir -p /mnt/gentoo/etc/portage/repos.conf
+nano /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
+[gentoo]
+location = /usr/portage
+sync-type = rsync
+#sync-uri = rsync://mirrors.tuna.tsinghua.edu.cn/gentoo-portage/
+sync-uri = rsync://rsync.mirrors.ustc.edu.cn/gentoo-portage/
+auto-sync = yes
+
+# 挂载内核文件系统，进入gentoo
+mount --types proc /proc /mnt/gentoo/proc
+mount --rbind /sys /mnt/gentoo/sys
+mount --make-rslave /mnt/gentoo/sys
+mount --rbind /dev /mnt/gentoo/dev
+mount --make-rslave /mnt/gentoo/dev
+chroot /mnt/gentoo /bin/bash
+env-update && source /etc/profile
+
+# 挂载boot分区
+mount /dev/mmcblk0p1 /mnt/gentoo/boot
+
+# 同步源
+emerge --sync
+
+# 插件profile
+eselect profile list
+
+# 首先更新gcc
+emerge gcc
+
+# 查找自己cpu的flags
+emerge --ask app-portage/cpuid2cpuflags
+cpuid2cpuflags
+# 添加到make.conf
+CPU_FLAGS_X86="aes mmx mmxext pclmul popcnt sse sse2 sse3 sse4_1 sse4_2 ssse3"
+
+# 更新系统本身
+emerge -auvDN --with-bdeps=y @world
+# 解决软件系统依赖
+emerge @preserved-rebuild
+perl-cleaner -all
+emerge -auvDN --with-bdeps=y @world
+
+# 更新gcc
+eselect gcc list
+eselect gcc set 1
+source /etc/profile
+
+# 配置时区
+echo "Asia/Shanghai" > /etc/timezone
+# 添加到/etc/locale.gen中
+en_US ISO-8859-1
+en_US.UTF-8 UTF-8
+zh_CN UTF-8
+zh_CN.GBK GBK    
+zh_CN.GB2312 GB2312
+zh_CN.GB18030 GB18030
+# 处理locale
+eselect locale list
+locale-gen
+eselect locale list
+
+# 安装中文字体
+emerge --search cjk
+emerge media-fonts/noto-cjk
+
+# 配置打开文件数，否则编译neovim失败
+nano /etc/security/limits.conf
+*             soft       nofile      10240
+*             hard       nofile      10240
+*             soft       noproc      10240
+*             hard       noproc      10240
+输入 ulimit -n 10240
+
+# 安装tmux, neovim
+emerge tmux
+# 添加luajit到/etc/portage/package.use/neovim
+# 编译neovim添加
+>=dev-lua/lpeg-1.0.1 luajit
+>=dev-lua/luv-1.32.0.0 luajit
+>=dev-lua/mpack-1.0.4 luajit
+emerge neovim
+
+# 安装btrfs工具
+emerge sys-fs/btrfs-progs
+
+# 配置fstab
+blkid
+UUID=3614-66BE          /boot           vfat            defaults        0 0
+UUID=e9504735-80d6-4067-b9bf-8ffc61c23471               /               btrfs          subvol=@,defaults,noatime,space_cache,space_cache=v2,autodefrag,discard=async,ssd,compress=zstd:1 0 1 
+UUID=efe62c8a-2fa1-4271-bc05-8ccdd228edbe       noneswap    defaults 0 0
+#subvol=@,defaults,noatime,space_cache,space_cache=v2,autodefrag,discard=async,ssd,compress=zstd:1 0 1
+#后面内存大了可以考虑tmpfs
+# tmpfs /tmp tmpfs size=32G,noatime 0 0
+# tmpfs /var/tmp tmpfs size=8G,noatime 0 0
+
+# 安装networkmanager及其他软件
+emerge sys-fs/btrfs-progs networkmanager app-admin/sysklogd sys-process/cronie sudo grub eselect-repository layman git
+# 添加USE
+nvim /etc/portage/package.use/networkmanager
+>=net-wireless/wpa_supplicant-2.9-r2 dbus
+#emerge -av networkmanager
+systemctl enable NetworkManager
+
+# 配置sudoers
+passwd
+nvim /etc/sudoers
+# 去掉wheel前面的#号
+sed -i 's/\# \%wheel ALL=(ALL) ALL/\%wheel ALL=(ALL) ALL/g' /etc/sudoers
+
+# 配置systemd
+sed -i 's/\# GRUB_CMDLINE_LINUX=\"init=\/usr\/lib\/systemd\/systemd\"/GRUB_CMDLINE_LINUX=\"init=\/usr\/lib\/systemd\/systemd\"/g' /etc/default/grub
+ln -sf /proc/self/mounts /etc/mtab
+systemd-machine-id-setup
+
+# 修改主机名字
+echo hostname=\"GPD\" > /etc/conf.d/hostname
+
+# 使用gentoo自定义内核
+emerge -av gentoo-sources
+make menuconfig
+# 打开btrfs支持,直接编译进内核*,非常重要!!
+
+# 或者查看overlay的源，获取第三方xanmod内核
+eselect repository list
+eselect repository list|grep src_prepare-overlay
+eselect repository enable 365
+eselect repository list -i
+emerge --sync
+eselect kernel list
+emerge --search xanmod
+emerge sys-kernel/xanmod-sources
+# 然后去https://github.com/xanmod/linux下载xanmod项目下.config文件到内核目录
+wget https://raw.githubusercontent.com/xanmod/linux/5.8/.config
+# 文本模式修改配置
+cd /usr/src
+# 多个内核时
+rm linux
+ln -s linux-5.8.8-xanmod-r1 linux
+make nconfig
+
+# 编译内核
+# 设置btrfs文件安全选项，编译到内核中，否则启动失败
+CONFIG_BLK_DEV_DM=y
+CONFIG_DM_CRYPT=y 
+make -j4 && make -j4 modules_install #将X替换为你想编译时的线程数
+make install
+
+# 安装genkernel，同时安装linux-firmware
+mkdir -p /etc/portage/package.license
+nvim /etc/portage/package.license/genkernel
+=sys-kernel/linux-firmware-20200817 linux-fw-redistributable no-source-code
+emerge genkernel
+genkernel --install initramfs
+
+# 配置grub
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Gentoo
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# 创建用户
+useradd -m -G users,wheel,portage,usb,video jezhang
+passwd jezhang
+
+# 安装桌面
+emerge -av xorg-server
+emerge -av xf86-video-intel
+emerge -av xorg-drivers
+emerge -av xorg-x11
+emerge -av x11-wm/dwm
+# 配置/etc/portage/package.use/dwm,保存配置到/etc/portage/savedconfig/x11-wm/dwm-6.0.h
+x11-wm/dwn savedconfig
+# 配置dmenu,到/etc/portage/savedconfig/x11-misc/dmenu-4.9.h
+emerge -av x11-misc/dmenu
+# 在dmenu显示状态
+emerge -av x11-apps/xsetroot
+# 背景显示系统信息,参考https://wiki.gentoo.org/wiki/Dwm
+emerge -av app-admin/conky
+startx
+nvim .xinitrc
+# 设置内容
+exec ck-launch-session dbus-launch --sh-syntax --exit-with-session dwm
+nvim /etc/conf.d/xdm
+# 修改displaymanager为dwm
+
+# 配置无线网卡?
+cf-812AC（Realtek 8812BU芯片）
+idVendor=0bda, idProduct=b812, bcdDevice= 2.10
+emerge usbutils
+wpa_supplicant -d -Dnl80211 -iwlp0s26u1u3 -c /etc/wpa_supplicant/wpa_supplicant.conf
+sudo wpa_cli log_level debug
+
+# 安装overlay源
+emerge eix
+layman -L|grep zugaina #列出所有的源
+layman -l
+layman -a zugaina
+layman -S #同步源
+eix-update #layman -S后只需要调用这个就能找到新包了，后面eix-sync不用
+eix-sync  #同步源和layman
+eix vim #查询包
+eix -S xxx #根据描述查询
+emerge gentoolkit
+equery belongs vim #查询文件属于哪个包
+equery files neovim #查询neovim包含的文件
+equery depends neovim #查询那些包依赖neovim
+equery uses neovim #查询neovim的uese
+
+# 安装docker
+emerge -uDUa @world
+
+# 安装nvim
+emerge pynvim
+pip2 install pynvim --user
+
+# 还没有执行完的命令
+sudo emerge dev-util/bcc dev-util/bpftrac
+pip2 install pynvim --user
+git clone https://github.com/aircrack-ng/rtl8812au.git
+sudo emerge rust-analyzer
+sudo emerge openjdk:11
+sudo emerge ccls
+重新编译内核
+sudo emerge fcitx
+
+failed to start daemon: Error initializing network controller: Error creating default "bridge" network: package not installed

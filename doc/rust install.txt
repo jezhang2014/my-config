@@ -1,0 +1,30 @@
+rustup install nightly
+
+设为default: 
+rustup default nightly
+
+export RUSTUP_DIST_SERVER=https://mirrors.tuna.tsinghua.edu.cn/rustup
+
+静态编译，否则放入docker中，entrypoint报错
+
+#rustup target add x86_64-unknown-linux-musl
+rustup target add x86_64-unknown-linux-musl --toolchain=nightly
+
+cargo build --release --target=x86_64-unknown-linux-musl
+
+ldd target/x86_64-unknown-linux-musl/release/untiled已经不是动态链接了
+
+rustup show
+
+
+
+
+FROM alpine
+
+WORKDIR /home/admin
+
+ADD target/x86_64-unknown-linux-musl/release/untitled /home/admin/untitled
+
+RUN chmod u+x /home/admin/untitled
+
+ENTRYPOINT ["/home/admin/untitled"]
