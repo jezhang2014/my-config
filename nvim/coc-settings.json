@@ -12,7 +12,7 @@
   "codeLens.enable": true,
   "list.previousKeymap": "<C-u>",
   "list.nextKeymap": "<C-e>",
-  "coc.preferences.formatOnSaveFiletypes": ["json"],
+  "coc.preferences.formatOnSaveFiletypes": ["json, yaml"],
   "explorer.file.column.indent.indentLine": true,
   "explorer.file.showHiddenFiles": true,
   "explorer.icon.enableNerdfont": true,
@@ -30,7 +30,9 @@
     "$HOME/.local/share/nvim/plugged/vim-snippets/UltiSnips"
   ],
   "java.jdt.ls.vmargs": "-noverify -Xmx4G -XX:+UseG1GC -XX:+UseStringDeduplication",
-  "rust-analyzer.serverPath": "/usr/bin/rust-analyzer",
+  "rust-analyzer.serverPath": "/home/jezhang/tools/rust-analyzer",
+  "clangd.enabled": true,
+  "clangd.semanticHighlighting": true,
   "languageserver": {
     "ccls": {
       "command": "ccls",
@@ -43,6 +45,7 @@
         ".hg/"
       ],
       "initializationOptions": {
+        "highlight": { "lsRanges": true },
         "cache": {
           "directory": ".ccls-cache"
         }
@@ -53,5 +56,11 @@
       "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
       "filetypes": ["go"]
     }
-  }
+  },
+  "yaml.schemas": {
+    "kubernetes": "/*.yaml"
+  },
+  "yaml.format.enable": true,
+  "git.addGBlameToVirtualText": true,
+  "git.addGBlameToBufferVar": true
 }

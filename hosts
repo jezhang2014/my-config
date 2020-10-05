@@ -1,25 +1,42 @@
-# Host addresses
-127.0.0.1  localhost
-127.0.1.1  jezhang-pc
-::1        localhost ip6-localhost ip6-loopback
-ff02::1    ip6-allnodes
-ff02::2    ip6-allrouters
+# /etc/hosts: Local Host Database
+#
+# This file describes a number of aliases-to-address mappings for the for 
+# local hosts that share this file.
+#
+# The format of lines in this file is:
+#
+# IP_ADDRESS	canonical_hostname	[aliases...]
+#
+#The fields can be separated by any number of spaces or tabs.
+#
+# In the presence of the domain name service or NIS, this file may not be 
+# consulted at all; see /etc/host.conf for the resolution order.
+#
 
-#140.82.112.3  github.com
-#140.82.113.4  gist.github.com
-#99.232.69.194  github.global.ssl.fastly.net
-#185.199.110.153  assets-cdn.github.com
-#199.232.68.133  raw.githubusercontent.com
-#199.232.68.133  cloud.githubusercontent.com
-#199.232.68.133  camo.githubusercontent.com
-#199.232.68.133 avatars0.githubusercontent.com
-#199.232.68.133 avatars1.githubusercontent.com
-#199.232.68.133 avatars2.githubusercontent.com
-#199.232.68.133 avatars3.githubusercontent.com
-#199.232.68.133 avatars4.githubusercontent.com
-#199.232.68.133 avatars5.githubusercontent.com
-#199.232.68.133 avatars6.githubusercontent.com
-#199.232.68.133 avatars7.githubusercontent.com
-#199.232.68.133 avatars8.githubusercontent.com
+# IPv4 and IPv6 localhost aliases
+127.0.0.1	localhost
+::1		localhost
 
-#2607:f8b0:4001:c22::52 go.googlesource.com
+#
+# Imaginary network.
+#10.0.0.2               myname
+#10.0.0.3               myfriend
+#
+# According to RFC 1918, you can use the following IP networks for private 
+# nets which will never be connected to the Internet:
+#
+#       10.0.0.0        -   10.255.255.255
+#       172.16.0.0      -   172.31.255.255
+#       192.168.0.0     -   192.168.255.255
+#
+# In case you want to be able to connect directly to the Internet (i.e. not 
+# behind a NAT, ADSL router, etc...), you need real official assigned 
+# numbers.  Do not try to invent your own network numbers but instead get one 
+# from your network provider (if any) or from your regional registry (ARIN, 
+# APNIC, LACNIC, RIPE NCC, or AfriNIC.)
+#
+
+199.232.68.133 raw.githubusercontent.com
+2607:f8b0:4009:802::2010 storage.googleapis.com
+130.211.22.235 mirror.bazel.build
+2607:f8b0:4001:c03::52 gcr.io

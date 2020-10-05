@@ -68,9 +68,22 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git
+	history
+	history-substring-search
+	zsh-autosuggestions
+	zsh-syntax-highlighting
+	autojump
+	colorize
+)
 
 source $ZSH/oh-my-zsh.sh
+
+source ~/.zplug/init.zsh
+
+zplug "kutsan/zsh-system-clipboard"
+zplug "b4b4r07/zsh-vimode-visual"
+zplug "kutsan/zsh-system-clipboard"
 
 # User configuration
 
@@ -103,15 +116,19 @@ export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
 alias vim=nvim
 
-export RUSTUP_DIST_SERVER=https://mirrors.tuna.tsinghua.edu.cn/rustup
+
+#export RUSTUP_DIST_SERVER=https://mirrors.tuna.tsinghua.edu.cn/rustup
+export JAVA_HOME=/opt/openjdk-bin-11
 alias d=docker
 export GOPROXY=https://goproxy.cn
-export PATH=~/tools:$PATH
+export PATH=~/tools:~/.local/bin:~/go/bin:~/.cargo/bin:$JAVA_HOME/bin:$PATH:~/tools/apache-maven-3.6.3/bin:~/bin
 
 export PAGER="most"
 
 export VISUAL=nvim
 alias ra=ranger
+
+export TEST_TMPDIR=/home/jezhang/build/bazel_cache
 
 source ~/tools/fzf-tab/fzf-tab.plugin.zsh
 
@@ -127,3 +144,23 @@ fkill() {
 
 alias cdf='cd $(find * -type d | fzf)'
 #export FZF_DEFAULT_COMMAND="rg --file --hidden --follow --glob '!.git'"
+export FZF_DEFAULT_COMMAND="rg --files --column --line-number --no-heading --glob '!git/' --glob '!test/' --smart-case"
+
+function F() {
+	fzf --bind="ctrl-l:execute(less -f {}),ctrl-e:execute(nvim -f {})" | awk '{$1=""; print $0}' | bash
+}
+
+function H() {
+	history | fzf --tac | awk '{$1=""; print $0}' | bash
+}
+
+function P() {
+	fzf --preview 'file {}' --bind '?:preview:cat {}'
+}
+
+bindkey "," autosuggest-accept
+
+[[ -s /home/jezhang/.autojump/etc/profile.d/autojump.sh ]] && source /home/jezhang/.autojump/etc/profile.d/autojump.sh
+autoload -U compinit && compinit -u
+
+export _JAVA_AWT_WM_NONREPARENTING=1  #解决java wmname问题

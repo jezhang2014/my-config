@@ -22,14 +22,46 @@ Plug 'nhooyr/neoman.vim'
 Plug 'Yggdroot/LeaderF'
 Plug 'edkolev/tmuxline.vim'
 Plug 'grailbio/bazel-compilation-database'
-Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'antoinemadec/coc-fzf'
 Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/vim-easy-align'
 Plug 'MattesGroeger/vim-bookmarks'
 Plug 'fatih/vim-go'
+Plug 'hardcoreplayers/dashboard-nvim'
+Plug 'Yggdroot/indentLine'
+Plug 'farmergreg/vim-lastplace'
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-session'
+Plug 'lfv89/vim-interestingwords'
+Plug 'liuchengxu/graphviz.vim'
+Plug 'vimwiki/vimwiki'
+Plug 'SidOfc/mkdx'
+Plug 'vim-vdebug/vdebug'
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'rust-lang/rust.vim'
+Plug 'jackguo380/vim-lsp-cxx-highlight'
+Plug 'bfrg/vim-jq'
+Plug 'lambdalisue/suda.vim'
+"dashboard需要依赖的功能
+Plug 'liuchengxu/vim-clap'
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' }
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
+Plug 'liuchengxu/vim-clap', { 'do': { -> clap#installer#force_download() } }
+Plug 'liuchengxu/vim-clap', { 'do': has('win32') ? 'cargo build --release' : 'make' }
 
+function! BuildComposer(info)
+	if a:info.status != 'unchanged' || a:info.force
+		if has('nvim')
+			!cargo build --release --locked
+		else
+			!cargo build --release --locked --no-default-features --features json-rpc
+		endif
+	endif
+endfunction
+
+Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 
 "set relativenumber
 set number
@@ -113,7 +145,7 @@ let g:snips_author = 'Sam Zhang'
 nnoremap te :CocCommand explorer<CR>
 "nnoremap te :NERDTreeToggle<CR>
 nnoremap tt :CocCommand floaterm.new<CR>
-nnoremap tf :FloatermNew --width=0.8 fzf<CR>
+"nnoremap tf :FloatermNew --width=0.8 fzf<CR>
 nnoremap tg :FloatermNew --height=0.8 --width=0.8 lazygit<CR>
 nnoremap tp :FloatermNew --height=0.8 --width=0.8 ipython<CR>
 nnoremap tl :FloatermNew lf<CR>
@@ -155,8 +187,95 @@ nnoremap <leader>Fze :FZF ~/source/envoy<CR>
 nnoremap <leader>Fzp :FZF ~/source/proxy<CR>
 nnoremap <leader>Fzi :FZF ~/source/istio<CR>
 
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+
 nnoremap <leader>N :nohl<CR>
 
+nnoremap <leader>Fs :CocCommand clangd.switchSourceHeader<CR>
+
+let g:Tlist_Ctags_Cmd='~/tools/ctags'
+
+set undofile
+set undodir=~/.vim/undodir
+
+let g:mkdx#settings     = { 'highlight': { 'enable': 1 },
+                        \ 'enter': { 'shift': 1 },
+                        \ 'links': { 'external': { 'enable': 1 } },
+                        \ 'toc': { 'text': 'Table of Contents', 'update_on_write': 1 },
+                        \ 'fold': { 'enable': 1 } }
+let g:polyglot_disabled = ['markdown']
+
+set mouse=a
+
+function! s:isAtStartOfLine(mapping)
+  let text_before_cursor = getline('.')[0 : col('.')-1]
+  let mapping_pattern = '\V' . escape(a:mapping, '\')
+  let comment_pattern = '\V' . escape(substitute(&l:commentstring, '%s.*$', '', ''), '\')
+  return (text_before_cursor =~? '^' . ('\v(' . comment_pattern . '\v)?') . '\s*\v' . mapping_pattern . '\v$')
+endfunction
+
+inoreabbrev <expr> <bar><bar>
+          \ <SID>isAtStartOfLine('\|\|') ?
+          \ '<c-o>:TableModeEnable<cr><bar><space><bar><left><left>' : '<bar><bar>'
+inoreabbrev <expr> __
+          \ <SID>isAtStartOfLine('__') ?
+          \ '<c-o>:silent! TableModeDisable<cr>' : '__'
+
+" if use markdown with lemonade
+let g:mkdp_refresh_slow = 1
+let g:mkdp_echo_preview_url = 1
+"let g:mkdp_open_to_the_world = 1
+"let g:mkdp_open_ip = '10.243.232.166'
+"let g:mkdp_port = 8080
+
+function! g:Open_browser(url)
+	silent exe '!lemonade open 'a:url
+endfunction
+"let g:mkdp_browserfunc = 'g:Open_browser'
+
+function! RipgrepFzf(query, fullscreen)
+	let command_fmt = 'rg --column --line-number --noheading --color=always --glob "!git/" --glob "!test/" --smart-case -- %s || true'
+	let initial_command = printf(command_fmt, shellescape(a:query))
+	let reload_command = printf(command_fmt, '{q}')
+	let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+	call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
+function! RipgrepFzfCpp(query, fullscreen)
+	let command_fmt = 'rg --column --line-number --noheading --color=always --glob "!git/" --glob "!test/" --glob ".{cpp,c,cc,h}" --smart-case -- %s || true'
+	let initial_command = printf(command_fmt, shellescape(a:query))
+	let reload_command = printf(command_fmt, '{q}')
+	let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+	call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+command! -nargs=* -bang RGC call RipgrepFzfCpp(<q-args>, <bang>0)
+
+let g:markdown_composer_autostart = 0
+au FileType markdown vmap <Leader>A :EasyAlign*<Bar><Enter>
+
+function! RipgrepFzfEnvoy(query, fullscreen)
+	let command_fmt = 'rg --column --line-number --noheading --color=always --glob "!git/" --glob "!test/" --glob "!.ccls-cache/" --glob ".{cpp,c,cc,h,proto}" --smart-case -- %s ~/source/envoy ~/source/proxy || true'
+	let initial_command = printf(command_fmt, shellescape(a:query))
+	let reload_command = printf(command_fmt, '{q}')
+	let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+	call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+command! -nargs=* -bang RGEnvoy call RipgrepFzfEnvoy(<q-args>, <bang>0)
+nnoremap trs :RGEnvoy<CR>
+
+function! RipgrepFzfEnvoyBuild(query, fullscreen)
+	let command_fmt = 'rg --column --line-number --noheading --color=always --glob "!git/" --glob "!test/" --glob ".{cpp,c,cc,h}" --smart-case -- %s ~/.cache || true'
+	let initial_command = printf(command_fmt, shellescape(a:query))
+	let reload_command = printf(command_fmt, '{q}')
+	let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+	call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+command! -nargs=* -bang RGEnvoyBuild call RipgrepFzfEnvoyBuild(<q-args>, <bang>0)
+nnoremap trb :RGEnvoyBuild<CR>
+
+let g:suda_smart_edit = 1
 
 call plug#end()
 
