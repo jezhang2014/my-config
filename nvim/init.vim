@@ -80,6 +80,8 @@ let g:coc_global_extensions = ['coc-json', 'coc-vimlsp', 'coc-marketplace']
 set hidden
 set updatetime=100
 
+set clipboard=unnamedplus
+
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1

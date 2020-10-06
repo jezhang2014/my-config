@@ -31,7 +31,7 @@
   ],
   "java.jdt.ls.vmargs": "-noverify -Xmx4G -XX:+UseG1GC -XX:+UseStringDeduplication",
   "rust-analyzer.serverPath": "/home/jezhang/tools/rust-analyzer",
-  "clangd.enabled": true,
+  "clangd.enabled": false,
   "clangd.semanticHighlighting": true,
   "languageserver": {
     "ccls": {
