@@ -281,5 +281,9 @@ nnoremap trb :RGEnvoyBuild<CR>
 
 let g:suda_smart_edit = 1
 
+hi! CocErrorSign  ctermfg=Green guifg=#ff0000
+hi! CocInfoSign  ctermfg=Green guifg=#ff0000
+hi! CocWarningSign  ctermfg=Green guifg=#ff0000
+
 call plug#end()
 
