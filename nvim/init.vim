@@ -86,6 +86,8 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 
+set ts=4 sw=4
+
 let g:airline_theme = 'xtermlight'
 "highlight Pmenu ctermbg=Yellow
 
@@ -208,7 +210,7 @@ let g:mkdx#settings     = { 'highlight': { 'enable': 1 },
                         \ 'fold': { 'enable': 1 } }
 let g:polyglot_disabled = ['markdown']
 
-set mouse=a
+" set mouse=a
 
 function! s:isAtStartOfLine(mapping)
   let text_before_cursor = getline('.')[0 : col('.')-1]

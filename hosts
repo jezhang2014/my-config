@@ -40,3 +40,6 @@
 2607:f8b0:4009:802::2010 storage.googleapis.com
 130.211.22.235 mirror.bazel.build
 2607:f8b0:4001:c03::52 gcr.io
+2607:f8b0:4002:c0c::5b dl-ssl.google.com
+2607:f8b0:4002:c08::52 go.googlesource.com
+2607:f8b0:4009:802::2011 proxy.golang.org
