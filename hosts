@@ -43,3 +43,5 @@
 2607:f8b0:4002:c0c::5b dl-ssl.google.com
 2607:f8b0:4002:c08::52 go.googlesource.com
 2607:f8b0:4009:802::2011 proxy.golang.org
+2607:f8b0:4003:c06::52 k8s.gcr.io
+# 3.94.35.164 registry-1.docker.io
