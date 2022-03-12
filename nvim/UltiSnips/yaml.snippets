@@ -1,0 +1,89 @@
+snippet nginx-all
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: public-html
+data:
+  secret.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+    secret_data_leaked
+    </body>
+    </html>
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+    service: nginx
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 80
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.20.0
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: public-html
+              mountPath: /usr/share/nginx/html/private
+      volumes:
+        - name: public-html
+          configMap:
+            name: public-html
+endsnippet
+
+snippet curl-client
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curl-deployment
+spec:
+  selector:
+    matchLabels:
+      app: curlpod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: curlpod
+      annotations:
+        sidecar.istio.io/statsInclusionPrefixes: "cluster_manager,listener_manager,http_mixer_filter,tcp_mixer_filter,server,cluster.xds-grpc,cluster,http"
+		#sidecar.istio.io/proxyImage: "istio/proxyv2:terrace"
+    spec:
+      containers:
+      - name: curlpod
+        command:
+        - sh
+        - -c
+        - while true; do sleep 1; done
+        image: curlimages/curl
+        imagePullPolicy: IfNotPresent
+endsnippet
+

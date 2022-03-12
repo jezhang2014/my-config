@@ -1,0 +1,86 @@
+{
+  "coc.preferences.extensionUpdateCheck": "daily",
+  "suggest.noselect": true,
+  "suggest.enablePreselect": false,
+  "diagnostic.displayByAle": false,
+  "diagnostic.refreshOnInsertMode": false,
+  "diagnostic.checkCurrentLine": true,
+  "diagnostic.virtualTextPrefix": ">>>",
+  "diagnostic.virtualText": true,
+  "codeLens.enable": true,
+  "list.previousKeymap": "<C-u>",
+  "list.nextKeymap": "<C-e>",
+  "coc.preferences.formatOnSaveFiletypes": ["json"],
+  "explorer.file.column.indent.indentLine": true,
+  "explorer.file.showHiddenFiles": true,
+  "explorer.icon.enableNerdfont": true,
+  "explorer.git.showIgnored": true,
+  "explorer.buffer.showHiddenBuffers": false,
+  "explorer.keyMappings.global": {
+    "<cr>": ["expandable?", "expand", "open"],
+    "v": "open:vsplit"
+  },
+  "snippets.ultisnips.enable": true,
+  "snippets.ultisnips.directories": [
+    "UltiSnips",
+    "$HOME/.config/nvim/UltiSnips",
+    "$HOME/.config/nvim/plugged/vim-snippets/UltiSnips",
+    "$HOME/.local/share/nvim/plugged/vim-snippets/UltiSnips"
+  ],
+  "java.jdt.ls.vmargs": "-noverify -Xmx4G -XX:+UseG1GC -XX:+UseStringDeduplication",
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-11",
+      "path": "/usr/lib/jvm/java-11-openjdk-amd64"
+    }
+  ],
+  "java.home": "/usr/lib/jvm/java-11-openjdk-amd64",
+  "java.jdt.ls.home": "/home/jezhang/tools/jdt-ls",
+  "java.maven.downloadSources": true,
+  "rust-analyzer.server.path": "/home/jezhang/tools/rust-analyzer",
+  "rust-analyzer.enable": true,
+  "languageserver": {
+    "ccls": {
+      "command": "/home/jezhang/tools/ccls",
+      "filetypes": ["c", "cpp", "cc"],
+      "rootPatterns": [
+        ".ccls",
+        "compile_commands.json",
+        ".vim/",
+        ".git/",
+        ".hg/"
+      ],
+      "initializationOptions": {
+        "highlight": { "lsRanges": true },
+        "cache": {
+          "directory": ".ccls-cache"
+        }
+      }
+    },
+    "golang": {
+      "command": "/home/jezhang/tools/gopls",
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"]
+    },
+    "rust": {
+      "command": "rust-analyzer",
+      "filetypes": ["rust"],
+      "rootPatterns": ["Cargo.toml"]
+    },
+    "bash": {
+      "command": "bash-language-server",
+      "args": ["start"],
+      "filetypes": ["sh"],
+      "ignoredRootPaths": ["~"]
+    }
+  },
+  "yaml.schemas": {
+    "kubernetes": "/*.yaml"
+  },
+  "yaml.schemaStore.enable": true,
+  "yaml.format.enable": true,
+  "yaml.trace.server": "verbose",
+  "http.proxyStrictSSL": false,
+  "git.addGBlameToVirtualText": true,
+  "git.addGBlameToBufferVar": true
+}

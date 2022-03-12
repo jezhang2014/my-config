@@ -1,0 +1,13 @@
+[http]
+	proxy = http://192.168.2.12:7890
+[http "https://github.com"]
+	proxy = http://192.168.2.12:7890
+[https "https://github.com"]
+	proxy = http://192.168.2.12:7890
+[https]
+	proxy = http://192.168.2.12:7890
+[user]
+	email = zhangwei_jef@hotmail.com
+	name = jezhang
+[credential]
+	helper = store
