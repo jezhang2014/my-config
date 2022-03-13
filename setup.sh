@@ -8,6 +8,10 @@ mkdir -p ~/.rustup
 ln -sf `pwd`/rustup/settings.toml ~/.rustup/settings.toml
 ln -sf `pwd`/tmux/tmux.conf ~/.tmux.conf
 ln -sf `pwd`/git/gitconfig ~/.gitconfig
+ln -sf `pwd`/vnc ~/.vnc
 ln -sf `pwd`/npm/npmrc ~/.npmrc
 ln -sf `pwd`/docker/daemon.json /etc/docker/daemon.json
 ln -sf `pwd`/ssh/authorized_keys ~/.ssh/authorized_keys
+
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
