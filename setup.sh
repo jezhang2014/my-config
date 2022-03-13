@@ -12,6 +12,7 @@ ln -sf `pwd`/vnc ~/.vnc
 ln -sf `pwd`/npm/npmrc ~/.npmrc
 ln -sf `pwd`/docker/daemon.json /etc/docker/daemon.json
 ln -sf `pwd`/ssh/authorized_keys ~/.ssh/authorized_keys
+ln -sf `pwd`/systemd/logind.conf /etc/systemd/logind.conf
 
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
