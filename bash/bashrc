@@ -120,13 +120,15 @@ export http_proxy="http://192.168.2.12:7890"
 export https_proxy="http://192.168.2.12:7890"
 export no_proxy="localhost,127.0.0.1,github.91chifun.workers.dev"
 
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+
 export GOPROXY=https://goproxy.cn
 export GO111MODULE=on
 export GONOSUMDB=*
 export GOSUMB=off
 
 . "$HOME/.cargo/env"
-export PATH=~/bin:~/.local/bin:.cargo/bin:~/go/bin:~/tools:/home/jezhang/tools/bin:$PATH:/usr/local/bin:/home/jezhang/sources/arthas/bin:/usr/share/bcc/tools
+export PATH=~/bin:~/.local/bin:.cargo/bin:~/go/bin:~/tools:/home/jezhang/tools/bin:$JAVA_HOME/bin:$PATH:/usr/local/bin:/home/jezhang/sources/arthas/bin:/usr/share/bcc/tools
 RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
 RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
 

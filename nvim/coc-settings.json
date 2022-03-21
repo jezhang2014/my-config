@@ -31,11 +31,11 @@
   "java.configuration.runtimes": [
     {
       "name": "JavaSE-11",
-      "path": "/usr/lib/jvm/java-11-openjdk-amd64"
+      "path": "/usr/lib/jvm/java-11-openjdk"
     }
   ],
-  "java.home": "/usr/lib/jvm/java-11-openjdk-amd64",
-  "java.jdt.ls.home": "/home/jezhang/tools/jdt-ls",
+  "java.home": "/usr/lib/jvm/java-11-openjdk",
+  "java.jdt.ls.home": "/usr/share/java/jdtls",
   "java.maven.downloadSources": true,
   "rust-analyzer.server.path": "/home/jezhang/tools/rust-analyzer",
   "rust-analyzer.enable": true,
