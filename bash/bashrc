@@ -120,6 +120,7 @@ export http_proxy="http://192.168.2.12:7890"
 export https_proxy="http://192.168.2.12:7890"
 export no_proxy="localhost,127.0.0.1,github.91chifun.workers.dev"
 
+export DISPLAY=192.168.2.12:0.0
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
 
 export GOPROXY=https://goproxy.cn

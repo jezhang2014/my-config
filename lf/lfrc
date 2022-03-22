@@ -113,9 +113,9 @@ map e
 map ee $$EDITOR "$f"
 map es $sudo $EDITOR "$f"
 map gc cd ~/.config/lf
-map gt cd ~/mnt/terrace
-map gp cd ~/mnt2/playground
-map gs cd ~/mnt2/source
+map gs cd ~/sources
+map gm cd ~/sources/my-config
+map gp cd ~/playground
 
 cmd lazygit ${{
 	lazygit
