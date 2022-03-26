@@ -21,3 +21,6 @@ sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.
 
 mkdir -p /etc/systemd/system/docker.service.d
 ln -sf `pwd`/docker/http-proxy.conf /etc/systemd/system/docker/http-proxy.conf
+
+# start conda
+source /opt/anaconda/bin/activate root
