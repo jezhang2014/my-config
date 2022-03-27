@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  server:
+    image: bitnami/nginx
+    container_name: nginx
+    restart: always
+    volumes:
+      - /root/data/nginx/nginx-block.conf:/opt/bitnami/nginx/conf/server_blocks/my_server_block.conf:ro
+      - /root/data/nginx/mykey:/certs
+    ports:
+      - "80:80"
+      - "443:443"
