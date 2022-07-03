@@ -2,13 +2,16 @@ version: "3"
 
 services:
   server:
-    image: codercom/code-server
+    image: linuxserver/code-server
     container_name: code-server
-      #environment:
+    environment:
       #  - DOCKER_USER=$USER
+      - PUID=1000
+      - PGID=1000
+      - PROXY_DOMAIN=code-server.my.domain
+      - DEFAULT_WORKSPACE=/config/workspace
     restart: always
     volumes:
-      - /root/data/code-server/config:/home/coder/.config
-      - /root/data/code-server/data:/home/coder/project
+      - /root/data/code-server/config:/config
     ports:
-      - "8080:8080"
+      - "8443:8443"

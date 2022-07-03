@@ -1,0 +1,21 @@
+version: "3"
+
+networks:
+  anaconda:
+    external: false
+
+services:
+  server:
+    image: anaconda3:my-conda
+    container_name: anaconda
+    restart: always
+    #networks:
+    #  - anaconda
+    environment:
+      - http_proxy=http://192.168.1.132:7890
+      - https_proxy=http://192.168.1.132:7890
+    volumes:
+      - /root/data/anaconda:/opt/notebooks
+    ports:
+      - "8888:8888"
+
