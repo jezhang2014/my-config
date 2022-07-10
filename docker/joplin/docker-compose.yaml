@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - /root/data/joplin/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=Jef66332833
+      - POSTGRES_USER=jezhang
+      - POSTGRES_DB=joplin
+      - http_proxy=http://192.168.1.132:7890
+      - https_proxy=http://192.168.1.132:7890
+  app:
+    image: joplin/server
+    depends_on:
+      - db
+    container_name: joplin
+    restart: unless-stopped
+    environment:
+      - http_proxy=http://192.168.1.132:7890
+      - https_proxy=http://192.168.1.132:7890
+      - APP_PORT=22300
+      - APP_BASE_URL=http://192.168.1.198:22300
+      - DB_CLIENT=pg
+      - POSTGRES_PASSWORD=Jef66332833
+      - POSTGRES_DATABASE=joplin
+      - POSTGRES_USER=jezhang
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=db
+    ports:
+      - "22300:22300"
+
