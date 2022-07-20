@@ -3,6 +3,7 @@ version: "3"
 services:
   server:
     #image: linuxserver/code-server
+    #image: gitpod/openvscode-server:my-vscode
     image: gitpod/openvscode-server
     container_name: code-server
     #environment:

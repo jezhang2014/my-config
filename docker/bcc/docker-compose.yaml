@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  bpf:
+    image: motikan2010/bcc-docker
+    container_name: bcc 
+    network_mode: "host"
+    cap_add:
+      - "NET_ADMIN"
+        #- "ALL"
+    privileged: true
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /lib/modules:/lib/modules:ro
+      - /usr/src:/usr/src:ro
+      - /sys/fs/bpf:/sys/fs/bpf
+      - /sys/fs/cgroup:/sys/fs/cgroup
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker/netns:/var/run/docker/netns:rshared
+      - /boot:/boot:ro
+        #- /sys/kernel/debug:/sys/kernel/debug
+      - ./docker-bpf/script:/root/script
+    working_dir: /usr/share/bcc/tools
+    tty: true
+    stdin_open: true
