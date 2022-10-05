@@ -37,11 +37,11 @@
   "java.home": "/usr/lib/jvm/java-11-openjdk",
   "java.jdt.ls.home": "/usr/share/java/jdtls",
   "java.maven.downloadSources": true,
-  "rust-analyzer.server.path": "/home/jezhang/tools/rust-analyzer",
+  "rust-analyzer.server.path": "/usr/bin/rust-analyzer",
   "rust-analyzer.enable": true,
   "languageserver": {
     "ccls": {
-      "command": "/home/jezhang/tools/ccls",
+      "command": "/usr/bin/ccls",
       "filetypes": ["c", "cpp", "cc"],
       "rootPatterns": [
         ".ccls",
@@ -58,7 +58,7 @@
       }
     },
     "golang": {
-      "command": "/home/jezhang/tools/gopls",
+      "command": "/usr/bin/gopls",
       "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
       "filetypes": ["go"]
     },

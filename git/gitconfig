@@ -1,13 +1,34 @@
 [http]
-	proxy = http://192.168.2.12:7890
+	proxy = http://192.168.1.132:7890
 [http "https://github.com"]
-	proxy = http://192.168.2.12:7890
+	proxy = http://192.168.1.132:7890
 [https "https://github.com"]
-	proxy = http://192.168.2.12:7890
+	proxy = http://192.168.1.132:7890
 [https]
-	proxy = http://192.168.2.12:7890
+	proxy = http://192.168.1.132:7890
 [user]
 	email = zhangwei_jef@hotmail.com
 	name = jezhang
 [credential]
 	helper = store
+[safe]
+	directory = /home/jezhang/bcc
+	directory = /home/jezhang/bcc/libbpf-tools/blazesym
+	directory = /home/jezhang/bcc/src/cc/libbpf
+	directory = /home/jezhang/bcc/libbpf-tools/bpftool
+	directory = /home/jezhang/bcc
+	directory = /home/jezhang/bcc/libbpf-tools/blazesym
+	directory = /home/jezhang/bcc/src/cc/libbpf
+	directory = /home/jezhang/bcc/libbpf-tools/bpftool
+	directory = /home/jezhang/bcc
+	directory = /home/jezhang/bcc/libbpf-tools/blazesym
+	directory = /home/jezhang/bcc/src/cc/libbpf
+	directory = /home/jezhang/bcc/libbpf-tools/bpftool
+	directory = /home/jezhang/bcc
+	directory = /home/jezhang/bcc/libbpf-tools/blazesym
+	directory = /home/jezhang/bcc/src/cc/libbpf
+	directory = /home/jezhang/bcc/libbpf-tools/bpftool
+	directory = /home/jezhang/bcc
+	directory = /home/jezhang/bcc/libbpf-tools/blazesym
+	directory = /home/jezhang/bcc/src/cc/libbpf
+	directory = /home/jezhang/bcc/libbpf-tools/bpftool

@@ -3,8 +3,12 @@ version: "3"
 services:
   openwrt:
     #image: openwrtorg/sdk:x86-64-21.02.2
+    #image: openwrtorg/sdk:ath79-nand-21.02.2
     image: openwrtorg/sdk:my_x86_64
     container_name: openwrt
     environment:
-      - http_proxy=http://192.168.1.132:7890
-      - https_proxy=http://192.168.1.132:7890
+      http_proxy : 'http://192.168.1.132:7890'
+      #- http_proxy=http://192.168.1.132:7890
+      https_proxy : 'http://192.168.1.132:7890'
+      #- https_proxy=http://192.168.1.132:7890
+      #no_proxy : 'localhost,127.0.0.1,github.91chifun.workers.dev'

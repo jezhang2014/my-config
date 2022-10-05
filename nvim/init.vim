@@ -176,7 +176,7 @@ let g:ariline_theme = 'soda'
 "highlight Pmenu ctermbg=Yellow
 
 "set foldmethod=syntax
-colorscheme pablo
+"colorscheme pablo
 "colorscheme murphy
 "colorscheme potts
 
